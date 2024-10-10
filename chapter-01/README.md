@@ -1,3 +1,5 @@
+> 摘抄整理自[PureWhite](https://juejin.cn/user/2594503170465198)老师在Qcon全球软件开发大会2022上的分享内容
+
 ## Rust 发展史
 ![Rust 发展史](image-1.png)
 
