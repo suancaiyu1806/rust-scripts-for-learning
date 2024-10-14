@@ -80,13 +80,13 @@ fn main() {
         'inner: loop {
             if y == 3 {
                 y += 1;
-                continue 'inner; // Skips to the next iteration of the 'inner loop
+                continue 'inner; // 跳过本次内层循环，跟直接continue效果一致
             }
 
             println!("x: {}, y: {}", x, y);
             y += 1;
             if y > 5 {
-                break 'outer y; // Breaks out of the 'outer loop
+                break 'outer y; // 跳出外层循环，并返回 y
             }
         }
     };
