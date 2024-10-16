@@ -26,12 +26,11 @@
 
 **String**
 
-String 为可变的，其值保存在堆中，引用保存在栈上，是一个胖指针：`fat pointer`，
+String 为可变的，其值保存在堆中，引用保存在栈上，是一个胖指针：`fat pointer`，结构为：
 
 - pointer: heap中值的内存地址
 - length: 当前值的长度、当前元素个数
-- capacity: 当前缓冲区的容量，可以容纳元素的个数，当前字符串的长度超过当前分配的capacity会重新分配内存，会将当前字符串拷贝到新分配的内存中）。
-
+- capacity: 当前缓冲区的容量，可以容纳元素的个数，当前字符串的长度超过当前分配的capacity会重新分配内存，会将当前字符串拷贝到新分配的内存中。
 
 ## 所有权
 
@@ -60,12 +59,16 @@ fn main() {
 
 ### 2. 所有权转移
 
+对于类似 i32 这样的简单类型，赋值的时候 Rust 会自动进行拷贝（Copy）。而对于 String 这样的分配到堆上的复杂类型，发生的却是所有权的转移，而不是拷贝。
+
 ```rust
 let x = 5;
 let y = x;
+println!("{}{}", x, y); // 5, 5
 
 let s1 = String::from("hello");
 let s2 = s1;
+println!("{}{}", s1, s2); // 编译报错：cannot move out of `s1` because it is borrowed
 ```
 
 ### *. 函数传参与返回值
