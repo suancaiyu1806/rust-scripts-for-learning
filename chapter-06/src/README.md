@@ -72,7 +72,8 @@ let s1 = String::from("hello");
 let s2 = s1;
 println!("{}{}", s1, s2); // 编译报错：cannot move out of `s1` because it is borrowed
 ```
-![](https://doc.rust-lang.org/stable/book/img/trpl04-01.svg)
+
+<img src="https://doc.rust-lang.org/stable/book/img/trpl04-01.svg" width="300px">
 
 一个 String 类型变量由指针和内容两部分组成：
 - 指针由三部分组成
@@ -85,13 +86,13 @@ println!("{}{}", s1, s2); // 编译报错：cannot move out of `s1` because it i
 
 当将 s1 的值赋给 s2 时，仅左半部分的 String 结构会被拷贝(即浅拷贝)。这时候内存中 s1 和 s2 是这样的：
 
-![](https://doc.rust-lang.org/stable/book/img/trpl04-02.svg)
+<img src="https://doc.rust-lang.org/stable/book/img/trpl04-02.svg" width="300px">
 
 根据上面说的所有权原则第三条，当所有者离开作用域范围，值将被丢弃(drop)。上图中 s1 和 s2 都指向同一个值，当他们离开作用域时，都会去执行drop的动作。这就产生了双重释放(double free)这一内存安全问题。
 
 因此Rust会进行所有权的转移，在 `let s2 = s1;` 执行完之后，所有权会从 s1 转移给 s2，s1 不再有效。这样一来，上述 String 值只会在 s2 离开作用域的时候被释放。所有权转移之后内存的示意图如下，s1 被标记为失效。
 
-![](https://doc.rust-lang.org/stable/book/img/trpl04-04.svg)
+<img src="https://doc.rust-lang.org/stable/book/img/trpl04-04.svg" width="300px">
 
 如果确实想要实现深拷贝，可以使用 clone 方法实现：
 
@@ -104,8 +105,7 @@ println!("s1 = {}, s2 = {}", s1, s2);
 
 此时内存示意图如下：
 
-![](https://doc.rust-lang.org/stable/book/img/trpl04-03.svg)
-
+<img src="https://doc.rust-lang.org/stable/book/img/trpl04-03.svg" width="300px">
 
 ### 附. 函数传参与返回值
 
