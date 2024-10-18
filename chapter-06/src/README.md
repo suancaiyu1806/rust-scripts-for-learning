@@ -1,5 +1,7 @@
 ## 基础知识
 
+> 参考：[What Is Ownership?](https://doc.rust-lang.org/stable/book/ch04-01-what-is-ownership.html)
+
 ### 1. 常用内存管理
 
 - 垃圾回收(GC, Garbage Collection)，在程序运行时找到所有不再使用的内存并回收，eg: JavaScript(标记清除、引用计数等)；
@@ -59,7 +61,7 @@ fn main() {
 
 ### 2. 所有权转移
 
-对于类似 i32 这样的简单类型，赋值的时候 Rust 会自动进行拷贝（Copy）。而对于 String 这样的分配到堆上的复杂类型，发生的却是所有权的转移，而不是拷贝。
+对于类似 i32 这样的简单类型，赋值的时候 Rust 会自动进行拷贝(深拷贝，因为这类简单类型都是存储在栈上的，对其执行拷贝动作开销很低)。而对于 String 这样的分配到堆上的复杂类型，发生的却是所有权的转移，而不是拷贝，如下面的两个例子。
 
 ```rust
 let x = 5;
@@ -70,8 +72,42 @@ let s1 = String::from("hello");
 let s2 = s1;
 println!("{}{}", s1, s2); // 编译报错：cannot move out of `s1` because it is borrowed
 ```
+![](https://doc.rust-lang.org/stable/book/img/trpl04-01.svg)
 
-### *. 函数传参与返回值
+一个 String 类型变量由指针和内容两部分组成：
+- 指针由三部分组成
+    - 一个指针指向实际存储String内容的位置
+    - 一个len表示长度
+    - 一个capacity表示容量
+- 内容存储具体的字符串内容
+
+指针和内容是分开的，指针存储在栈上，内容存储在堆上。
+
+当将 s1 的值赋给 s2 时，仅左半部分的 String 结构会被拷贝(即浅拷贝)。这时候内存中 s1 和 s2 是这样的：
+
+![](https://doc.rust-lang.org/stable/book/img/trpl04-02.svg)
+
+根据上面说的所有权原则第三条，当所有者离开作用域范围，值将被丢弃(drop)。上图中 s1 和 s2 都指向同一个值，当他们离开作用域时，都会去执行drop的动作。这就产生了双重释放(double free)这一内存安全问题。
+
+因此Rust会进行所有权的转移，在 `let s2 = s1;` 执行完之后，所有权会从 s1 转移给 s2，s1 不再有效。这样一来，上述 String 值只会在 s2 离开作用域的时候被释放。所有权转移之后内存的示意图如下，s1 被标记为失效。
+
+![](https://doc.rust-lang.org/stable/book/img/trpl04-04.svg)
+
+如果确实想要实现深拷贝，可以使用 clone 方法实现：
+
+```rust
+let s1 = String::from("hello");
+let s2 = s1.clone();
+
+println!("s1 = {}, s2 = {}", s1, s2);
+```
+
+此时内存示意图如下：
+
+![](https://doc.rust-lang.org/stable/book/img/trpl04-03.svg)
+
+
+### 3. 函数传参与返回值
 
 ## 引用与借用
 
