@@ -107,7 +107,30 @@ println!("s1 = {}, s2 = {}", s1, s2);
 ![](https://doc.rust-lang.org/stable/book/img/trpl04-03.svg)
 
 
-### 3. 函数传参与返回值
+### 附. 函数传参与返回值
+
+传参给函数以及函数返回值时，也会经历所有权转移的过程，如下例所示：
+
+```rust
+fn takes_ownership(s: String) {
+    println!("Received string: {}", s);
+} // s 离开作用域，被丢弃
+
+fn gives_ownership() -> String {
+    String::from("hello")
+} // 返回了String的所有权
+
+fn main() {
+    let s = String::from("hello");
+    takes_ownership(s); // s转移到了函数内，不再可用
+
+    // s 不再可用
+
+    let s = gives_ownership(); // s 获得了返回值的所有权
+}
+```
+
+
 
 ## 引用与借用
 
