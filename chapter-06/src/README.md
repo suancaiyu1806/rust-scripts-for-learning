@@ -118,31 +118,89 @@ fn takes_ownership(s: String) {
 
 fn gives_ownership() -> String {
     String::from("hello")
-} // 返回了String的所有权
+} // 返回了 String 的所有权
 
 fn main() {
     let s = String::from("hello");
-    takes_ownership(s); // s转移到了函数内，不再可用
+    takes_ownership(s); // s 转移到了函数内，不再可用
 
-    // s 不再可用
+    // s 不可用
 
     let s = gives_ownership(); // s 获得了返回值的所有权
 }
 ```
 
-
-
 ## 引用与借用
 
-### 1. 可变引用
+借用是 Rust 中非常重要的概念，它允许你使用值而不获取其所有权。
 
-### 2. 不可变引用
+### 1. 不可变引用
 
-### 3. NLL
+```rust
+fn main() {
+    let s1 = String::from("hello");
+    let len = calculate_length(&s1);
+    println!("The length of '{}' is {}.", s1, len);
+}
 
-### 4. 悬垂引用
+fn calculate_length(s: &String) -> usize {
+    s.len()
+}
+```
 
-### *. 引用规则总结
+在给 s 传入 &s1 的时候，实际是创建了一个指向 s1 的引用，这个引用没有值的所有权。因此当函数体内的 s 超出作用域范围被丢弃时，不会导致 String 被丢弃。其在内存中示意图如下：
+
+<img src="https://doc.rust-lang.org/stable/book/img/trpl04-05.svg" width="400px">
+
+Rust 中声明的变量默认是不可变变量，默认的引用也是不可变的引用。创建引用的这个动作就被称为借用。
+
+### 2. 可变引用
+
+```rust
+fn main() {
+    let mut s = String::from("hello");
+    change(&mut s);
+    println!("The updated string is: {}", s);
+}
+
+fn change(s: &mut String) {
+    s.push_str(", world!");
+}
+```
+
+这里将 s 声明为可变变量，然后通过 &mut 创建了一个可变引用。而 change 函数的参数 s 也声明为可变引用。
+
+**注意：对于一个变量，同时只能存在一个可变引用或者多个不可变引用。** 可参考该示例：
+
+```rust
+fn main() {
+    let mut s = String::from("hello");
+
+    // 多个不可变引用是允许的
+    let r1 = &s;
+    let r2 = &s;
+    println!("r1: {}, r2: {}", r1, r2);
+
+    // 一个可变引用也是允许的。
+    let r3 = &mut s;
+    println!("r3: {}", r3); // 这里编译时会有优化行为 Non-Lexical Lifetimes(NLL)，引用的作用域结束的位置不再是花括号的位置，而是最后一次使用的位置，因此不会报错
+    // println!("r2: {}, r3: {}", r2, r3); // 这样就会报错，实际上变成了下面同时打印 r3 和 r4 的情况
+
+    // 不允许同时存在可变引用和不可变引用，将导致编译错误
+    let r4 = &s;
+    println!("r3: {}, r4: {}", r3, r4); // 会报错
+}
+```
+
+上面例子中涉及了 NLL(Non-Lexical Lifetimes) 优化：**引用的作用域结束的位置不再是花括号的位置，而是最后一次使用的位置**。
+
+### 3. 悬垂引用
+
+> Rust 编译器保证引用永远也不会变成悬垂状态，即永远也不会出现一个指针指向一个已经释放掉的内存地址。
+
+悬垂引用指的是指针指向的是内存中一个已经被释放的地址，这在其他的一些有指针的语言中是很常见的错误。而 Rust 则可以在编译阶段就保证不会产生悬垂引用。也就是说，如果有一个引用指向某个数据，编译器能保证在引用离开作用域之前，被指向的数据不会被释放（会编译不通过）。
+
+### 附. 引用规则总结
 
 ## 切片
 
