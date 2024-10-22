@@ -215,6 +215,47 @@ fn dangle() -> &String {
 
 ## 切片
 
+切片可以让我们引用集合中的一段连续空间。切片也是一种引用，因此没有所有权。
+
 ### 1. 字符串切片
 
+```rust
+let s = String::from("hello world");
+
+let hello = &s[0..5]; // [0, 5)
+let world = &s[6..11]; // [6, 11)
+```
+
+这段代码中，hello 和 world 都是 s 的切片（字符串切片），字符串切片的类型是 &str。其在内存中的示意图如下：
+
+<img src="https://doc.rust-lang.org/stable/book/img/trpl04-06.svg" width="300px">
+
+对于`..`语法，Rust 有一些特殊的语法糖，可以省略开始或结束位置。
+
+```rust
+let s = String::from("hello");
+let len = s.len();
+
+//以0开始时，0可以省略
+let slice = &s[0..2];
+let slice = &s[..2];
+
+//以最后一位结束时，len可以省略
+let slice = &s[3..len];
+let slice = &s[3..];
+
+//同时满足上述两条，那么两头都可以省略
+let slice = &s[0..len];
+let slice = &s[..];
+```
+
 ### 2. 其他切片
+
+除 String 外，数组类型也有切片。例如：
+
+```rust
+let a = [1, 2, 3, 4, 5];
+let slice = &a[1..3];
+
+assert_eq!(slice, &[2, 3]); // 断言执行成功
+```
