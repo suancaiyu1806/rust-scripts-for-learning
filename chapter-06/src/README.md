@@ -206,10 +206,10 @@ fn main() {
 fn main() {
     let reference_to_nothing = dangle();
 }
-fn dangle() -> &String {
-    let s = String::from("hello");
 
-    &s
+fn dangle() -> &String {
+    let s = String::from("hello"); // 创建一个 String 类型的 s
+    &s // 返回s的引用，但 s 离开函数 dangle 后就离开了作用域，会被丢弃。此时返回的 s 的引用指向的为非法位置。Rust编译器检查到了这个问题，从而报错。
 }
 ```
 
