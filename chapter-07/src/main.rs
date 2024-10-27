@@ -44,4 +44,12 @@ fn main() {
     struct Color(i32, i32, i32);
     let black = Color(0, 0, 0);
     // black.0 = 255; // 编译报错：cannot assign to immutable field `0` of struct `Color`，因为元组结构体中的元素是不可变的
+
+    // 7. 单元结构体
+    /**
+     * 单元结构体并不包含任何字段，通常被用于需要实现某种 trait，但不需存储任何数据的场景，仅关注行为而不关注其内容时。
+     * 这种结构体很像我们之前讲过的单元类型()，因此也被称为单元结构体。
+     */
+    struct Marker;
+    let marker = Marker;
 }
