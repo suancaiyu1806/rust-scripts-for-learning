@@ -12,10 +12,7 @@ fn main() {
     let p = Point { x, y }; // 字段名和变量名相同时可以简写，同JS
 
     // 3. 结构体的访问
-    println!(
-        "The coordinates of the point are ({}, {})",
-        point.x, point.y
-    );
+    println!("The coordinates of the point are ({}, {})", p.x, p.y);
 
     // 4. 更新结构体字段值
     /**
@@ -41,4 +38,10 @@ fn main() {
         email: String::from("alice2@example.com"),
         ..user1 // 支持类似JS析构的写法
     }; // age 为 u8，会自动 copy，user1.age仍可用；username 为 String，会发生所有权转移，user1.username 不可用
+
+    // 6. 元组结构体
+    // Rust支持结构体的字段没有名称，这种情况下会长得很像元组，因此叫做元组结构体。可以通过red.0，red.1来访问字段的值。
+    struct Color(i32, i32, i32);
+    let black = Color(0, 0, 0);
+    // black.0 = 255; // 编译报错：cannot assign to immutable field `0` of struct `Color`，因为元组结构体中的元素是不可变的
 }
