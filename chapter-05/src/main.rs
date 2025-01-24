@@ -10,7 +10,7 @@ fn pass_exam(score: u32) -> bool {
     if score < 60 {
         return false; // 可以调用return返回
     }
-    true // 默认返回函数体最后一个表达式的值（有多个会报错）
+    true // 默认返回函数体最后一个表达式的值，不加分号（有多个会报错）
 }
 
 /**
